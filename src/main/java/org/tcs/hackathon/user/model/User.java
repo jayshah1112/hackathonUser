@@ -50,16 +50,23 @@ public class User extends PanacheMongoEntityBase  {
 	
 	
 	public static List<User> findByUserFullName(String userFullName) {
-        //return find("title", title).firstResult();
-        //return find(" {'title':{$in: [?1]}}",title).list();
 		return find("userFullName",userFullName).list();
     }
 	
 	public static User findByUserEmailId(String userEmailId) {
-        //return find("title", title).firstResult();
-        //return find(" {'title':{$in: [?1]}}",title).list();
 		return find("userEmailId",userEmailId).firstResult();
     }
+	
+	public static boolean authUser(String userName, String userPass) {
+		boolean userAuth = false;
+		User userObj = find("userEmailId = ?1 and  userPassword = ?2",userName,userPass).firstResult();
+		if(userObj != null) {
+			userAuth = true;
+		}
+		return userAuth;
+    }
+	
+	
 	
 	
 }

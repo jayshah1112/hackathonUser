@@ -132,6 +132,31 @@ public class UserResource {
 	        return dummyUserList;
 	    }
 	    
+		@GET
+		@Path("/authUser/{userName}/{userPass}")
+	    @Retry(maxRetries = 4)
+	    @Timeout(250)
+	    @Fallback(fallbackMethod = "userAuthFallBack")
+	    @CircuitBreaker(requestVolumeThreshold = 4)
+	    @Counted(name = "performedUserAuth", description = "How many times a user is authenticated.")
+	    @Timed(name = "userAuthTimer", description = "A measure of how long it takes to authorise a user", unit = MetricUnits.MILLISECONDS)
+	    public String authUser(@PathParam("userName") String userName,@PathParam("userPass") String userPass) {
+			String message = "userNotAutenticated";
+			boolean userAuth = User.authUser(userName,userPass);
+			if(userAuth){
+				message = "userAuthenticated";
+			}
+	        return message;
+	    }
+	    
+	    public String userAuthFallBack(@PathParam("userName") String userName,@PathParam("userPass") String userPass) {
+	        String message = "AuthroizationServiceDownTryLater";
+	        return message;
+	    }
+		
+		
+		
+		
 	    
 	    @GET
 	    @Path("/count")
