@@ -140,18 +140,13 @@ public class UserResource {
 	    @CircuitBreaker(requestVolumeThreshold = 4)
 	    @Counted(name = "performedUserAuth", description = "How many times a user is authenticated.")
 	    @Timed(name = "userAuthTimer", description = "A measure of how long it takes to authorise a user", unit = MetricUnits.MILLISECONDS)
-	    public String authUser(@PathParam("userName") String userName,@PathParam("userPass") String userPass) {
-			String message = "userNotAutenticated";
-			boolean userAuth = User.authUser(userName,userPass);
-			if(userAuth){
-				message = "userAuthenticated";
-			}
-	        return message;
+	    public User authUser(@PathParam("userName") String userName,@PathParam("userPass") String userPass) {
+			//String message = "userNotAutenticated";
+			return User.authUser(userName,userPass);
 	    }
 	    
-	    public String userAuthFallBack(@PathParam("userName") String userName,@PathParam("userPass") String userPass) {
-	        String message = "AuthroizationServiceDownTryLater";
-	        return message;
+	    public User userAuthFallBack(@PathParam("userName") String userName,@PathParam("userPass") String userPass) {
+	        return null;
 	    }
 		
 		
